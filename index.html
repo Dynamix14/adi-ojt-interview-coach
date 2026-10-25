@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a111e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="OJT Coach">
+<meta name="description" content="Mock interview practice for an Analog Devices General Trias OJT / internship screening: 42 questions, example answers, schematics.">
+<title>ADI GenTri OJT Interview Coach</title>
+<style>
+  :root{
+    --bg:#0a111e; --panel:#101a2b; --panel2:#0d1626; --line:#1e2b42;
+    --text:#e8eef8; --muted:#8fa2bd; --accent:#38bdf8; --accent2:#22d3a6;
+    --warn:#fbbf24; --bad:#f87171; --good:#34d399;
+  }
+  *{box-sizing:border-box}
+  html{ -webkit-text-size-adjust:100%; }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;line-height:1.55}
+  body{min-height:100vh;min-height:100dvh;background:
+    radial-gradient(900px 400px at 15% -10%, rgba(56,189,248,.10), transparent 60%),
+    radial-gradient(700px 380px at 90% 0%, rgba(34,211,166,.07), transparent 60%),
+    var(--bg);}
+  .wrap{max-width:900px;margin:0 auto;padding:28px 22px calc(80px + env(safe-area-inset-bottom))}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:26px}
+  .brand{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted)}
+  .chip{display:inline-block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--panel2)}
+  .chip.tech{color:var(--accent);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.08)}
+  .chip.beh{color:var(--accent2);border-color:rgba(34,211,166,.35);background:rgba(34,211,166,.08)}
+  h1{font-size:clamp(26px,4vw,38px);line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--muted);font-size:15.5px;max-width:640px;margin:0 0 24px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:26px 0}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:14px;padding:16px}
+  .card .n{font-size:22px;font-weight:600}
+  .card .l{font-size:12px;color:var(--muted);margin-top:2px}
+  .btn{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--text);
+    font:inherit;font-size:14.5px;padding:11px 18px;border-radius:10px;cursor:pointer;
+    min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+    transition:all .15s ease}
+  .btn:hover{border-color:rgba(56,189,248,.5);background:#122036}
+  .btn.primary{background:linear-gradient(135deg,#0ea5e9,#0284c7);border-color:#0ea5e9;color:#04121f;font-weight:600}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.ghost{background:transparent}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .note{font-size:12.5px;color:var(--muted);margin-top:16px;max-width:620px}
+  /* quiz */
+  .bar{height:5px;background:#14203a;border-radius:99px;overflow:hidden;margin:0 0 22px}
+  .bar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transition:width .25s ease}
+  .meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;
+    font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+  .qtext{font-size:clamp(19px,2.6vw,25px);line-height:1.4;margin:6px 0 20px;font-weight:500;letter-spacing:-.01em}
+  .timer{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px;letter-spacing:.02em}
+  .timer.over{color:var(--warn)}
+  .panelbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:8px}
+  .panelbox h3{margin:0 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  .panelbox p{margin:0 0 10px;font-size:15px}
+  .panelbox ul{margin:6px 0 0;padding-left:18px;color:#cbd8ea;font-size:14px}
+  .panelbox li{margin:4px 0}
+  .say{border-left:3px solid rgba(56,189,248,.55);padding:2px 0 2px 16px;margin:0 0 16px;
+    font-size:16px;line-height:1.62;color:#dce7f6}
+  .why{font-size:13.5px;color:var(--muted);line-height:1.55;margin:0}
+  .why b{color:#b9c9de;font-weight:600}
+  .rate{margin-top:18px}
+  .rate .btn{flex:1;min-width:130px}
+  .r-good{border-color:rgba(52,211,153,.4)!important}
+  .r-mid{border-color:rgba(251,191,36,.4)!important}
+  .r-bad{border-color:rgba(248,113,113,.4)!important}
+  .nav{display:flex;justify-content:space-between;margin-top:26px;gap:10px}
+  .kbd{font-size:11px;color:var(--muted);border:1px solid var(--line);border-bottom-width:2px;
+    padding:1px 6px;border-radius:5px;margin:0 2px}
+  /* results */
+  .score{display:flex;align-items:flex-end;gap:10px;margin:8px 0 4px}
+  .score .big{font-size:64px;font-weight:700;line-height:1;letter-spacing:-.03em}
+  .score .of{color:var(--muted);font-size:16px;padding-bottom:8px}
+  .rbar{display:grid;grid-template-columns:1fr 46px;gap:10px;align-items:center;margin:12px 0}
+  .rbar .t{font-size:14px}
+  .rbar .track{height:8px;background:#14203a;border-radius:99px;overflow:hidden;margin-top:5px}
+  .rbar .track > i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#0ea5e9,#22d3a6)}
+  .rbar .pct{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px}
+  .tag{display:inline-block;font-size:11.5px;padding:3px 9px;border-radius:999px;margin:3px 5px 3px 0;
+    border:1px solid rgba(248,113,113,.35);color:#fca5a5;background:rgba(248,113,113,.08)}
+  .schematic{background:#0b1424;border:1px solid var(--line);border-radius:12px;padding:12px 10px;margin:0 0 18px}
+  .schematic svg{display:block;width:100%;height:auto}
+  .hidden{display:none!important}
+  @media (max-width:430px){
+    .wrap{padding:16px 14px calc(64px + env(safe-area-inset-bottom))}
+    .topbar{flex-wrap:wrap;gap:6px;padding-bottom:10px;margin-bottom:18px}
+    .brand{font-size:9.5px;letter-spacing:.1em}
+    h1{font-size:27px}
+    .sub{font-size:14px}
+    .grid{grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}
+    .card{padding:12px}
+    .card .n{font-size:19px}
+    .qtext{font-size:19px}
+    .panelbox{padding:15px 14px}
+    .say{font-size:15px;padding-left:12px}
+    .rate{gap:6px}
+    .rate .btn{min-width:0;font-size:13px;padding:10px 6px}
+    .rate .btn .chip{display:none}
+    .nav{gap:8px}
+    .nav .btn{flex:1}
+    .score .big{font-size:52px}
+  }
+  @media print{
+    body{background:#fff;color:#111}
+    .wrap{max-width:none;padding:0}
+    .btn,.nav,.topbar .right{display:none!important}
+    .panelbox,.card{border-color:#ddd;background:#fff}
+    .panelbox h3{color:#0369a1}
+    .say{color:#111;border-left-color:#0369a1}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">Analog Devices &middot; General Trias &middot; OJT / Internship</div>
+    <div class="right"><span class="chip" id="modeChip">OJT Coach</span></div>
+  </div>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <h1>OJT / Internship<br><span>Interview Coach</span></h1>
+    <p class="sub">42 questions calibrated for an internship screening, not a full-time post. The answers are
+      written in your voice, using the AD7575 TestStand lab, the ESP32 ultrasonic piano, the badminton thesis,
+      your Mapua OJT requirements and your ADI site visit. Logistics and paperwork get asked here, so they get
+      their own round.</p>
+
+    <div class="grid">
+      <div class="card"><div class="n" id="cCount">42</div><div class="l">questions</div></div>
+      <div class="card"><div class="n">6</div><div class="l">rounds</div></div>
+      <div class="card"><div class="n">~55</div><div class="l">minutes</div></div>
+      <div class="card"><div class="n">Self</div><div class="l">rated</div></div>
+    </div>
+
+    <div class="panelbox">
+      <h3>Rounds</h3>
+      <ul>
+        <li><strong>1 · Screening &amp; availability</strong> — hours, dates, commute, school paperwork</li>
+        <li><strong>2 · What the internship looks like</strong> — expectations, ESD, confidentiality, asking for help</li>
+        <li><strong>3 · Projects &amp; tools</strong> — your AD7575 lab, piano, thesis, and honest tool levels</li>
+        <li><strong>4 · Test &amp; measurement basics</strong> — ATE, DMM vs scope, test plans, yield</li>
+        <li><strong>5 · Circuit fundamentals</strong> — the written exam: op-amps, RC, diodes, devices</li>
+        <li><strong>6 · Solve the schematic</strong> — six diagrams worked on paper</li>
+      </ul>
+    </div>
+
+    <div class="row" style="margin-top:24px">
+      <button class="btn primary" id="startBtn">Start interview</button>
+      <button class="btn ghost hidden" id="resumeBtn">Resume saved session</button>
+      <button class="btn ghost hidden" id="clearBtn">Clear saved</button>
+    </div>
+    <p class="note">Brackets mark the facts only you can fill in: required hours, start date, your commute plan,
+      which part of the thesis was yours. Fill them before the real interview.
+      Keyboard: <span class="kbd">Space</span> reveal &middot; <span class="kbd">1</span> missed &middot;
+      <span class="kbd">2</span> partial &middot; <span class="kbd">3</span> nailed it &middot;
+      <span class="kbd">&larr;</span>/<span class="kbd">&rarr;</span> navigate.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="hidden">
+    <div class="bar"><i id="progFill"></i></div>
+    <div class="meta">
+      <span id="roundLabel">Round 1 · Screening</span>
+      <span class="timer" id="timer">00:00</span>
+    </div>
+    <div class="meta" style="margin-bottom:6px">
+      <span id="qCounter">Question 1 / 42</span>
+      <span id="catLabel"></span>
+    </div>
+    <div class="schematic hidden" id="svgWrap"></div>
+    <div class="qtext" id="qText"></div>
+    <div class="row">
+      <button class="btn" id="revealBtn">Show example answer</button>
+      <span class="note" id="suggested" style="margin:0"></span>
+    </div>
+
+    <div class="panelbox hidden" id="answerBox">
+      <h3>Say it like this</h3>
+      <div class="say" id="sayText"></div>
+      <p class="why" id="whyText"></p>
+      <div id="rubricWrap"><h3 style="margin-top:18px">What they are listening for</h3><ul id="rubricList"></ul></div>
+      <div class="rate row" id="rateRow">
+        <button class="btn r-bad" data-rate="0">Missed it <span class="chip" style="margin-left:4px">1</span></button>
+        <button class="btn r-mid" data-rate="0.5">Partial <span class="chip" style="margin-left:4px">2</span></button>
+        <button class="btn r-good" data-rate="1">Nailed it <span class="chip" style="margin-left:4px">3</span></button>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn ghost" id="prevBtn">&larr; Previous</button>
+      <button class="btn" id="finishBtn">Finish &amp; see results</button>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="hidden">
+    <h1 style="font-size:30px">Your result</h1>
+    <div class="score"><div class="big" id="scoreBig">0%</div><div class="of" id="scoreOf">of questions addressed</div></div>
+    <p class="sub" id="verdict"></p>
+    <div id="roundBars"></div>
+    <div class="panelbox" id="weakBox">
+      <h3>Drill these next</h3>
+      <div id="weakList"></div>
+      <p class="note" id="weakNote"></p>
+    </div>
+    <div class="row" style="margin-top:22px">
+      <button class="btn primary" id="againBtn">Run it again</button>
+      <button class="btn" id="printBtn">Print / save PDF</button>
+      <button class="btn ghost" id="reviewBtn">Review answers</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const ROUNDS = [
+  {id:1, name:"Screening & availability", short:"Round 1 · Screening & availability"},
+  {id:2, name:"What the internship looks like", short:"Round 2 · What the internship looks like"},
+  {id:3, name:"Projects & tools", short:"Round 3 · Projects & tools"},
+  {id:4, name:"Test & measurement basics", short:"Round 4 · Test & measurement basics"},
+  {id:5, name:"Circuit fundamentals", short:"Round 5 · Circuit fundamentals"},
+  {id:6, name:"Solve the schematic", short:"Round 6 · Solve the schematic"}
+];
+
+/* say = spoken answer in Clyde's voice, built from CV_Ledesma_v13.
+   why = why it lands / what to adapt. Brackets = confirm before using live. */
+const Q = [
+  /* ---------- ROUND 1 ---------- */
+  {r:1, cat:"Behavioral", t:150, q:"Tell me about yourself.",
+   say:`I'm Clyde, an Electronics Engineering student at Mapua, specializing in test and measurement, and I'm applying for my OJT. The project closest to this role is our automated parametric test, where I built the sequence in NI TestStand with the LabVIEW Semiconductor Module, characterized leakage on the high-bit pins of an AD7575, and computed DNL and INL from the measurements. I also built an ESP32 ultrasonic piano that became a five-page IEEE student paper, and a badminton service-fault detector using YOLOv8 and BoT-SORT. I applied here because I want to spend my OJT where test is the actual product, not a subject in a syllabus.`,
+   why:"<b>Why this works:</b> it says OJT in the first sentence, gives three things you can defend, and ends on the role. Keep it under 80 seconds.",
+   rubric:["Says OJT/internship up front","Three concrete proof points","Ends with why ADI","No reading of the CV"]},
+
+  {r:1, cat:"Behavioral", t:150, q:"Why do you want to intern at Analog Devices, and why test engineering?",
+   say:`The AD7575 lab decided it for me. The pass or fail came from numbers I measured myself, not from a simulation I set up to agree with me, and that was the most interesting coursework I've had. I also saw the GenTri test floor on our department visit, so I know the work is real hardware and real programs. I'd rather learn test development inside a company that does it at scale than guess at it from modules.`,
+   why:"<b>Why this works:</b> one honest moment, one piece of evidence you were physically there. Do not claim a lifelong passion.",
+   rubric:["Specific reason tied to coursework","Mentions the site visit","Understands test is hardware + software","No generic 'I want to grow' answer"]},
+
+  {r:1, cat:"Company", t:120, q:"What do you know about the GenTri site and what the teams there do?",
+   say:`The site is in Gateway Business Park in General Trias, Cavite. From the visit and from the postings, the teams do test development and product engineering for parts like precision converters, amplifiers and power management, and they support fabs and design groups in other regions. Test engineers there build the hardware and the program that characterize and screen parts, so the work runs from a bench setup to a released test solution.`,
+   why:"<b>Why this works:</b> you name the park and the product families. Most interns only know the company logo.",
+   rubric:["Knows the location","Knows test development, not just manufacturing","Names product families","Understands the bench-to-production flow"]},
+
+  {r:1, cat:"Availability", t:120, q:"How many hours do you need, and when can you start?",
+   say:`I need [X hours] to complete my OJT, and my window is [start date] to [end date]. I can be on site [five days a week / your schedule], and I'm flexible on shift if the team needs a different one. I'd like to start [date] so I have buffer before [defense / graduation].`,
+   why:"<b>Why this works:</b> the number comes first. Have the exact hours and dates memorized, because this is the question that decides scheduling.",
+   rubric:["Exact required hours","Clear start and end dates","Days per week stated","Flexible on shift"]},
+
+  {r:1, cat:"Logistics", t:150, q:"You're in Manila. General Trias is a long way. How will you manage the commute?",
+   say:`I've already thought about it. From Ermita to General Trias is a long trip, so [I plan to board near the site for the duration / I'd take the earliest bus and adjust my study schedule around the shift]. I'd rather fix that before day one than let attendance become the problem, and I can show you the route and the travel time I've allowed.`,
+   why:"<b>Why this works:</b> this is a real filter for Cavite internships. A plan beats enthusiasm, and 'I'll figure it out' sounds like a future absence.",
+   rubric:["A concrete plan, not optimism","Names the travel time","Shows reliability","No vague 'I'll manage'"]},
+
+  {r:1, cat:"Paperwork", t:120, q:"What does your school require before you can start?",
+   say:`Mapua needs a memorandum of agreement between the school and the company, an endorsement letter from our OJT coordinator, and usually insurance and a medical certificate. [Add anything your coordinator requires, like a weekly logbook or a supervisor evaluation form.] I can send the templates this week and follow up myself, so the paperwork doesn't delay the start date.`,
+   why:"<b>Why this works:</b> companies lose weeks to missing MOAs. Showing you know the list makes you the easy hire.",
+   rubric:["MOA named","Endorsement letter","Insurance/medical","Offers to drive the paperwork"]},
+
+  /* ---------- ROUND 2 ---------- */
+  {r:2, cat:"Expectations", t:150, q:"What do you expect to be doing as an intern in test development?",
+   say:`Supporting the engineers, not owning a program. Bench setup and wiring, data logging, learning the team's LabVIEW or Python scripts, running characterization sweeps, and organizing results. Documentation too, because somebody has to write it. If I get good at that, I'd hope to earn a small piece of a real evaluation with someone checking my work.`,
+   why:"<b>Why this works:</b> interns who expect to design a test program on week one get marked as unrealistic. This answer shows you know the job.",
+   rubric:["Realistic scope","Names concrete tasks","Mentions documentation","Wants to earn more responsibility"]},
+
+  {r:2, cat:"Work style", t:120, q:"A lot of intern work is repetitive: setup, re-running, entering data. How do you feel about that?",
+   say:`I'm fine with it. In the AD7575 project the actual measurement took minutes and the rest was setup, checking connections, and re-running because something drifted. Repetitive work is how you learn what normal looks like, and once you know normal you can tell when something is off.`,
+   why:"<b>Why this works:</b> it turns a boring-job question into evidence that you have already done bench work.",
+   rubric:["No complaints or conditions","Uses a real example","Shows it builds judgment","Understands why the work is repetitive"]},
+
+  {r:2, cat:"Judgment", t:120, q:"When you're stuck, how do you decide between asking for help and figuring it out yourself?",
+   say:`My rule is about thirty minutes. I check the obvious things first: connections, supply, settings, the manual. If I still can't move, I ask, and I bring what I've already ruled out so the question is specific. I'd rather ask one focused question than lose a day being proud.`,
+   why:"<b>Why this works:</b> the time box and the 'what I ruled out' detail are exactly what supervisors want to hear.",
+   rubric:["A time limit, not a feeling","Checks basics first","Brings evidence when asking","No 'I never ask' answer"]},
+
+  {r:2, cat:"Safety", t:150, q:"What does ESD safety mean on a bench, and what would you do before touching a board?",
+   say:`ESD is a static discharge that can damage a junction without killing the part outright, so it shows up later as leakage or drift that's hard to trace. Before touching a board I'd put on a wrist strap, work on an ESD mat, and keep the board in its bag until it's on the bench. I'd also avoid synthetic sleeves and sliding on a chair. Before powering anything I'd set the supply voltage and current limit first, because a wrong limit is how parts die.`,
+   why:"<b>Why this works:</b> the current-limit sentence proves you have actually powered a board, not just read a poster.",
+   rubric:["Defines ESD damage","Wrist strap and mat","Keeps parts bagged","Sets voltage and current limit first"]},
+
+  {r:2, cat:"Confidentiality", t:120, q:"You'll see test programs, yields and product data. How do you handle that?",
+   say:`I'd treat all of it as company information. It stays on company systems, I don't discuss it outside, and I don't photograph a screen or a board. If I wanted to use something for a school report, I'd ask first and anonymize it, even if it's just a number.`,
+   why:"<b>Why this works:</b> the photo sentence is the one that lands, because that is how leaks actually happen with interns.",
+   rubric:["Treats data as confidential","No outside discussion","No photos/screenshots","Asks before using anything for school"]},
+
+  /* ---------- ROUND 3 ---------- */
+  {r:3, cat:"Project", t:180, q:"Walk me through the AD7575 parametric test project.",
+   say:`The goal was to characterize an AD7575 ADC the way a production test would. I built the sequence in TestStand driving the LabVIEW Semiconductor Module: apply the input, capture the codes, compute the errors, and log everything. I characterized leakage on the high-bit pins, ran time-conversion measurements, and computed DNL and INL from the code data. What taught me the most was the setup, because a bad ground or a settling time that's too short shows up looking exactly like a bad part.`,
+   why:"<b>Why this works:</b> this is your single strongest asset for this role. The last sentence is the interview answer; the rest is context.",
+   rubric:["Goal stated","Names the tools actually used","Says what you measured","One lesson about setup vs part"]},
+
+  {r:3, cat:"Project", t:150, q:"What exactly did you compute, and how?",
+   say:`Leakage was a current measurement on the high-bit pins with the part in a known state, compared against the datasheet limit. Time conversion was measuring how long the part took to produce a valid code. DNL came from comparing each code width against one LSB, and INL from how far the transfer curve sat from a straight line. I logged the raw readings so the calculations could be checked later, and so I could re-plot without re-running.`,
+   why:"<b>Why this works:</b> method plus reproducibility. If they ask 'show me', you can describe the data. If you still have the log, bring it.",
+   rubric:["Leakage = current vs limit","DNL = code widths","INL = deviation from a line","Raw data logged for checking"]},
+
+  {r:3, cat:"Project", t:150, q:"Tell me about the ultrasonic piano.",
+   say:`It's a contactless piano. An array of ultrasonic sensors reads finger distance, the ESP32 measures time of flight from the TRIG pulse, and the distance maps to a note sent out as MIDI. I did the acquisition side: sensor timing, level shifting down to 3.3 volts, and the note mapping. We wrote it up as a five-page IEEE student paper and defended the working prototype.`,
+   why:"<b>Why this works:</b> time of flight and level shifting are the two details that prove you built it rather than bought it.",
+   rubric:["Explains the sensing method","Names your own part","Mentions 3.3 V level shifting","Shows the output (paper, defense)"]},
+
+  {r:3, cat:"Project", t:150, q:"What was your role in the badminton project?",
+   say:`The system watches a badminton serve and decides whether it's legal under service rules 9.1.4 to 9.1.6. YOLOv8 detects the player, racket and shuttle, BoT-SORT keeps identities across frames, and my part was the rule logic on top of the tracked trajectories: contact height, racket angle, and where the shuttle is struck. [Confirm this matches your actual slice before you say it.]`,
+   why:"<b>Why this works:</b> rule numbers plus your slice. If a teammate did the detection, say so; interviewers ask.",
+   rubric:["States the problem","Names the pipeline","Owns a specific slice","Honest about what you did not build"]},
+
+  {r:3, cat:"Tools", t:150, q:"Which tools are you actually comfortable with?",
+   say:`TestStand and the LabVIEW Semiconductor Module are the ones I've used for a graded project, so those are my strongest. C++ from coursework, and MATLAB for data analysis and plotting. For circuits I've used LTspice, Multisim and TINA Pro, and I've done PCB layout. Python I've used in the vision project, but I'd call myself a beginner, not fluent.`,
+   why:"<b>Why this works:</b> calibrated honesty. Saying 'beginner' for Python protects you from a follow-up you cannot answer, and it makes the strong claims believable.",
+   rubric:["Separates used-from-read-about","Names the graded project","Honest about Python","Matches the CV"]},
+
+  {r:3, cat:"Teamwork", t:150, q:"Tell me about a time you had to coordinate with a teammate on a project.",
+   say:`In the badminton project two of us were tuning the same thresholds and stepping on each other's results. We split it so one person owned detection and the other owned the rules, and agreed on one shared log format. After that the arguments were about data instead of opinions. [Swap in what actually happened if it was different.]`,
+   why:"<b>Why this works:</b> small, real, and it ends with a mechanism (shared log), not a feeling.",
+   rubric:["Names the friction","Describes the split","A concrete agreement","Ends with the outcome"]},
+
+  /* ---------- ROUND 4 ---------- */
+  {r:4, cat:"ATE", t:150, q:"What is ATE, in simple terms? And what is the difference between wafer probe and final test?",
+   say:`ATE is the machine that tests chips: a tester with instruments, a handler or prober that brings parts to it, and a program that applies signals and checks the response. Wafer probe happens on the wafer, before packaging. Final test happens on packaged parts after assembly. Same idea, different hardware, and a very different cost when a bad part escapes.`,
+   why:"<b>Why this works:</b> three pieces (tester, handler, program), then the cost sentence that shows why the distinction matters.",
+   rubric:["Tester + handler/prober + program","Wafer probe before packaging","Final test after assembly","Mentions cost of escape"]},
+
+  {r:4, cat:"Instruments", t:120, q:"DMM versus oscilloscope: when do you use each?",
+   say:`A DMM measures one value at a time, slowly and accurately: voltage, current, resistance. A scope shows a waveform over time, so it's for shape, timing and noise. For a DC level or a leakage current I'd use the DMM. For a clock, a transient, or something oscillating that shouldn't be, I'd use the scope.`,
+   why:"<b>Why this works:</b> speed versus shape is the right axis, and you give a use case for each.",
+   rubric:["DMM = single accurate value","Scope = waveform over time","Correct choice per case","Mentions noise or timing"]},
+
+  {r:4, cat:"Test planning", t:150, q:"What is a test plan, and what goes into it?",
+   say:`A test plan says what you measure, under what conditions, against what limits, and in what order. It names the instrument setup, the conditions like supply and temperature, the limits and where they came from, the sequence, and what data gets logged. If another engineer can't run it from the plan alone, it isn't finished.`,
+   why:"<b>Why this works:</b> the last sentence is a real standard. It shows you think about the next person, which is what documentation is for.",
+   rubric:["Measurements and conditions","Limits and their source","Sequence and setup","Logging","Runnable by someone else"]},
+
+  {r:4, cat:"Characterization", t:120, q:"What does characterization mean?",
+   say:`It's mapping how a part actually behaves across conditions: supply, temperature, input range, load. You do it to find where the part works and where it stops working, and the result is how production limits get set with margin. It's different from a pass or fail test, because you're collecting the shape of the behavior.`,
+   why:"<b>Why this works:</b> you distinguish it from pass/fail, which is the usual confusion.",
+   rubric:["Behavior across conditions","Finds the operating space","Sets limits with margin","Distinguishes from pass/fail"]},
+
+  {r:4, cat:"Test methods", t:120, q:"What do continuity and leakage tests catch?",
+   say:`Continuity proves a pin is really connected, so it catches an open bond or a broken trace. Leakage applies a voltage to a pin and measures the current, usually expecting microamps or less, so it catches ESD damage, a bad junction, or a short to the next pin. They run early because they're cheap and fast.`,
+   why:"<b>Why this works:</b> an order-of-magnitude number (microamps) is what makes it sound like you have seen a datasheet.",
+   rubric:["Continuity = open detection","Leakage = junction/ESD damage","Microamp range","Why they run early"]},
+
+  {r:4, cat:"Yield", t:120, q:"What is yield, and why do companies track it?",
+   say:`Yield is the percentage of parts that pass. 970 out of 1000 is 97 percent. Companies track it because every failed part already has silicon, package and test time spent on it, so yield is money. A drop also tells you something changed, either in the process or in the test.`,
+   why:"<b>Why this works:</b> you compute the example without being asked and connect it to cost and to diagnosis.",
+   rubric:["Definition correct","97% worked out","Ties it to cost","Notes it signals a change"]},
+
+  {r:4, cat:"ESD", t:120, q:"Why does ESD matter more than people think?",
+   say:`Because the damage is often partial. A discharge can weaken a junction instead of destroying it, so the part passes on the bench and fails in the field months later, and by then nobody can trace it back. That's why the wrist strap and the mat exist, and why I don't handle a bare board casually.`,
+   why:"<b>Why this works:</b> 'passes now, fails later' is the actual risk, and it explains the ritual instead of just listing it.",
+   rubric:["Partial/latent damage","Passes then fails later","Hard to trace","Ties to the precautions"]},
+
+  {r:4, cat:"First week", t:150, q:"It's your first week. What do you do to be useful?",
+   say:`I'd learn the bench before touching anything: where things are, how to power up safely, what the team's naming and logging conventions are, and who to ask for what. Then I'd read the test plan and the program for whatever part the team is working on, and ask for one small task I can finish and have checked. Being useful early is mostly not breaking things and not needing to be told twice.`,
+   why:"<b>Why this works:</b> the closing line is memorable and true. It also signals humility without sounding passive.",
+   rubric:["Learns the bench first","Asks about conventions","Reads existing documentation","Wants a small checkable task"]},
+
+  /* ---------- ROUND 5 ---------- */
+  {r:5, cat:"Op-amps", t:120, q:"Inverting amplifier: Rf = 100 kΩ, Rin = 10 kΩ, Vin = 0.2 V. What is the gain, the output, and the input impedance?",
+   say:`The gain is minus Rf over Rin, so minus 100k over 10k, which is minus 10. With 0.2 volts in, the output is minus 2 volts. The input impedance is basically Rin, 10k, because the inverting node sits at virtual ground and the source only sees that resistor. I'd also check the rails. If this were running on a single 5 volt supply, the output can't go negative, so it would clip at the bottom rail and the math would be right but the circuit wouldn't work.`,
+   why:"<b>Why this works:</b> the rail check at the end is the sentence that separates you from someone who memorized the formula.",
+   rubric:["Gain −10","Vout = −2.0 V","Zin = 10 kΩ","Rail/clipping check"]},
+
+  {r:5, cat:"Op-amps", t:120, q:"Why is the inverting input called a virtual ground?",
+   say:`With negative feedback, the op-amp drives its output until the two inputs sit at almost the same voltage. If the non-inverting input is grounded, the inverting input gets pulled to about zero volts too, even though it isn't connected to ground. That node barely swings, but current still flows through the feedback resistor, and the current from the source is set by Rin.`,
+   why:"<b>Why this works:</b> mechanism first, then the consequence. That is the order an interviewer wants.",
+   rubric:["Feedback forces V− ≈ V+","Not physically grounded","Current flows through Rf","Input current set by Rin"]},
+
+  {r:5, cat:"Op-amps", t:120, q:"Non-inverting amplifier with Rf = 47 kΩ and Rg = 10 kΩ. Gain, and output for 0.1 V in?",
+   say:`Gain is 1 plus Rf over Rg, so 1 plus 4.7, which is 5.7. With 0.1 volts in, that's 0.57 volts out. The input impedance here is very high, so I'd pick this topology if the source were high impedance.`,
+   why:"<b>Why this works:</b> formula, numbers, then the design reason. Three sentences, no filler.",
+   rubric:["1 + Rf/Rg","Gain 5.7","Vout 0.57 V","Notes high input impedance"]},
+
+  {r:5, cat:"RC", t:120, q:"R = 10 kΩ, C = 100 nF. Time constant, cutoff frequency, and time to 63%?",
+   say:`Tau is R times C, 10k times 100 nanofarads, so 1 millisecond. The cutoff is 1 over 2 pi RC, about 159 hertz. At one tau the capacitor is at 63 percent of its final value, and I'd wait about five tau before calling it settled, which is roughly 99 percent. On a test bench that five tau is the settling time I budget before measuring.`,
+   why:"<b>Why this works:</b> the last sentence turns a textbook answer into a bench answer.",
+   rubric:["τ = 1 ms","fc ≈ 159 Hz","63% at 1τ","Settling ≈ 5τ"]},
+
+  {r:5, cat:"Diodes", t:150, q:"5 V source, 1 kΩ resistor into a diode to ground. Does it conduct, what is Vout, what is the current? Now reverse it.",
+   say:`Check the bias first. Pointing down to ground, the diode is forward biased, so it clamps that node at about 0.7 volts, and the current is 5 minus 0.7 over 1k, 4.3 milliamps. Reverse it and it's reverse biased, no current flows, there's no drop across the resistor, so the node sits at 5 volts. The trap is solving for Vout before checking the direction.`,
+   why:"<b>Why this works:</b> you name the trap. That is what they write down.",
+   rubric:["Bias check first","0.7 V and 4.3 mA","Reverse: 0 A, 5 V","Explains why there is no drop"]},
+
+  {r:5, cat:"KVL / KCL", t:120, q:"12 V across 2 kΩ and 4 kΩ in series. Current, and voltage across the 4 kΩ?",
+   say:`Series loop, so the current is 12 over 6k, 2 milliamps. Across the 4k that's 8 volts, and across the 2k it's 4 volts. Check: 4 plus 8 is 12, so the loop closes.`,
+   why:"<b>Why this works:</b> say the check out loud. Clean method under pressure reads as competence.",
+   rubric:["I = 2 mA","V = 8 V","KVL check","No hand-waving"]},
+
+  {r:5, cat:"KVL / KCL", t:150, q:"2 mA current source into a node with 3 kΩ and 6 kΩ to ground. Node voltage?",
+   say:`The two resistors are in parallel from that node to ground. 3k parallel 6k is 2k. Two milliamps into 2k gives 4 volts. The branches take 1.33 and 0.67 milliamps, which adds back to 2.`,
+   why:"<b>Why this works:</b> parallel first, then the branch check. Same routine every time.",
+   rubric:["3k‖6k = 2k","V = 4 V","Branch currents","KCL check"]},
+
+  {r:5, cat:"Thevenin", t:150, q:"12 V, 6 kΩ to the output node, 3 kΩ from that node to ground. Find the Thevenin equivalent.",
+   say:`Open circuit, the output is the divider: 12 times 3 over 9, so 4 volts. To get the resistance I kill the source, which shorts it, so 6k parallel 3k is 2k. On a bench that 2k is what the DUT pin sees as a source impedance, and it tells me how much my meter will load the node.`,
+   why:"<b>Why this works:</b> the loading sentence is why the question is asked.",
+   rubric:["Vth = 4 V","Rth = 2 kΩ","Short-the-source method","Loading relevance"]},
+
+  {r:5, cat:"BJT", t:120, q:"Using a BJT as a switch, what regions does it use and what is VCE in saturation?",
+   say:`Cut off or saturation. Cut off when the base-emitter isn't forward biased and there's no collector current. Saturation when it's driven hard and VCE is about 0.1 to 0.2 volts. I size the base resistor from the collector current and a forced beta of maybe a fifth of the datasheet value, so it stays hard on across temperature and part spread. The active region just burns power, so I avoid it for switching.`,
+   why:"<b>Why this works:</b> forced beta is the detail that proves you have sized a real base resistor.",
+   rubric:["Cutoff and saturation","VCE(sat) ≈ 0.1–0.2 V","Base resistor from IC and forced beta","Avoid the active region"]},
+
+  {r:5, cat:"MOSFET", t:150, q:"When does an NMOS turn on, and in a CMOS inverter which transistor is on when the input is low?",
+   say:`An NMOS conducts when gate-to-source is above the threshold. In a CMOS inverter with the input low, the NMOS is off and the PMOS is on, so the output goes to VDD. Input high, the PMOS is off and the NMOS pulls the output to ground. Two NMOS in series with two PMOS in parallel is a NAND.`,
+   why:"<b>Why this works:</b> you answer the inverter and extend to the logic question they usually follow with.",
+   rubric:["VGS > Vth","Correct states for input low","Output follows the on device","NAND structure"]},
+
+  {r:5, cat:"Passives", t:120, q:"What does a capacitor do on a supply line?",
+   say:`It's a local charge reservoir. When a chip pulls a current spike, the capacitor supplies it instead of the trace inductance, so the supply doesn't sag. It also gives high-frequency noise a low impedance path to ground. That's why you see a small capacitor close to every power pin, and why the placement matters as much as the value.`,
+   why:"<b>Why this works:</b> placement matters as much as value is a working engineer's observation.",
+   rubric:["Local charge reservoir","Supplies transient current","Low impedance for noise","Placement matters"]},
+
+  /* ---------- ROUND 6 · schematics ---------- */
+  {r:6, cat:"Network", t:180, q:"Series-parallel network. Find the total current from the supply, the voltage at node A, and the current in each branch.",
+   svg:`<svg viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/svg">
+<g stroke="#8fa2bd" stroke-width="1.6" fill="none" stroke-linecap="round">
+<circle cx="70" cy="120" r="24" stroke="#cbd8ea"/>
+<path d="M70 96 V50 H150"/><path d="M70 144 V190"/>
+<rect x="150" y="43" width="70" height="14" stroke="#cbd8ea" fill="#101a2b"/>
+<path d="M220 50 H300"/>
+<path d="M300 50 V80"/><rect x="293" y="80" width="14" height="60" stroke="#cbd8ea" fill="#101a2b"/><path d="M300 140 V190"/>
+<path d="M300 50 H400 V80"/><rect x="393" y="80" width="14" height="60" stroke="#cbd8ea" fill="#101a2b"/><path d="M400 140 V190"/>
+<path d="M46 190 H94 M56 196 H84 M66 202 H74"/>
+<path d="M276 190 H324 M286 196 H314 M296 202 H304"/>
+<path d="M376 190 H424 M386 196 H414 M396 202 H404"/>
+</g>
+<circle cx="300" cy="50" r="3.5" fill="#38bdf8"/>
+<g fill="#cbd8ea" font-size="13" font-family="Segoe UI, sans-serif">
+<text x="148" y="35">R1 = 6 kΩ</text><text x="316" y="112">R2 = 6 kΩ</text>
+<text x="416" y="112">R3 = 3 kΩ</text><text x="309" y="43" fill="#38bdf8">A</text>
+<text x="30" y="88">12 V</text>
+</g></svg>`,
+   say:`R2 and R3 sit in parallel, so 6k parallel 3k is 2k. That's in series with R1, so total is 8k and the supply current is 12 over 8k, 1.5 milliamps. The voltage at A is that current through 2k, so 3 volts. The branches take 3 over 6k, half a milliamp, and 3 over 3k, one milliamp, which adds back to 1.5.`,
+   why:"<b>Why this works:</b> reduce parallel first, then series, then check the branches. Say the check out loud.",
+   rubric:["6k‖3k = 2k","Total 8k, I = 1.5 mA","VA = 3 V","Branch check 0.5 + 1 mA"]},
+
+  {r:6, cat:"Loading", t:180, q:"Resistive divider. Find Vout with nothing connected, then with the 10 kΩ load connected. Explain the difference.",
+   svg:`<svg viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/svg">
+<g stroke="#8fa2bd" stroke-width="1.6" fill="none" stroke-linecap="round">
+<circle cx="70" cy="120" r="24" stroke="#cbd8ea"/>
+<path d="M70 96 V50 H180"/><path d="M70 144 V190"/>
+<rect x="180" y="43" width="70" height="14" stroke="#cbd8ea" fill="#101a2b"/>
+<path d="M250 50 H300"/>
+<path d="M300 50 V80"/><rect x="293" y="80" width="14" height="60" stroke="#cbd8ea" fill="#101a2b"/><path d="M300 140 V190"/>
+<path d="M300 50 H420 V80"/><rect x="413" y="80" width="14" height="60" stroke="#cbd8ea" fill="#101a2b"/><path d="M420 140 V190"/>
+<path d="M46 190 H94 M56 196 H84 M66 202 H74"/>
+<path d="M276 190 H324 M286 196 H314 M296 202 H304"/>
+<path d="M396 190 H444 M406 196 H434 M416 202 H424"/>
+</g>
+<circle cx="300" cy="50" r="3.5" fill="#38bdf8"/>
+<g fill="#cbd8ea" font-size="13" font-family="Segoe UI, sans-serif">
+<text x="178" y="35">R1 = 10 kΩ</text><text x="316" y="112">R2 = 10 kΩ</text>
+<text x="436" y="112">RL = 10 kΩ</text><text x="309" y="43" fill="#38bdf8">A</text>
+<text x="30" y="88">12 V</text>
+</g></svg>`,
+   say:`Unloaded, it's the divider: 12 times 10 over 20, so 6 volts. With the 10k load across R2, the bottom is 10k parallel 10k, which is 5k. Total is 15k, so the current is 0.8 milliamps, and the output is 0.8 milliamps times 5k, 4 volts. The load pulled it down 2 volts, and that's exactly the loading error you have to know before you trust a measurement.`,
+   why:"<b>Why this works:</b> the number matters, but the closing sentence is why an interviewer believes you understand dividers.",
+   rubric:["Unloaded 6 V","10k‖10k = 5k","I = 0.8 mA, Vout = 4 V","2 V droop explained"]},
+
+  {r:6, cat:"Diode", t:150, q:"Will the diode conduct? Find Vout and the diode current. Then answer again with the diode reversed.",
+   svg:`<svg viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/svg">
+<g stroke="#8fa2bd" stroke-width="1.6" fill="none" stroke-linecap="round">
+<circle cx="70" cy="120" r="24" stroke="#cbd8ea"/>
+<path d="M70 96 V50 H150"/><path d="M70 144 V190"/>
+<rect x="150" y="43" width="70" height="14" stroke="#cbd8ea" fill="#101a2b"/>
+<path d="M220 50 H320"/>
+<path d="M320 50 V78"/>
+<polygon points="306,78 334,78 320,100" stroke="#cbd8ea" fill="#101a2b"/>
+<path d="M306 100 H334"/>
+<path d="M320 100 V150"/>
+<path d="M296 150 H344 M306 156 H334 M316 162 H324"/>
+<path d="M46 190 H94 M56 196 H84 M66 202 H74"/>
+</g>
+<circle cx="320" cy="50" r="3.5" fill="#38bdf8"/>
+<g fill="#cbd8ea" font-size="13" font-family="Segoe UI, sans-serif">
+<text x="148" y="35">R = 1 kΩ</text><text x="338" y="46" fill="#38bdf8">B</text>
+<text x="342" y="90">Vout</text><text x="30" y="88">5 V</text>
+</g></svg>`,
+   say:`Check the bias first. The diode points down to ground, so the 5 volts forward biases it, it clamps node B at about 0.7 volts, and the current is 5 minus 0.7 over 1k, 4.3 milliamps. Reverse it and it's reverse biased, no current flows, there's no drop across the resistor, so B sits at the full 5 volts.`,
+   why:"<b>Why this works:</b> bias check, then numbers, then the flipped case. Never start with the equation.",
+   rubric:["Bias check","0.7 V, 4.3 mA","Reverse: no current, 5 V","Explains no drop"]},
+
+  {r:6, cat:"RC", t:180, q:"The switch closes at t = 0. Find Vc at one time constant, at five time constants, and the time to reach 3 V.",
+   svg:`<svg viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/svg">
+<g stroke="#8fa2bd" stroke-width="1.6" fill="none" stroke-linecap="round">
+<circle cx="70" cy="120" r="24" stroke="#cbd8ea"/>
+<path d="M70 96 V50 H180"/><path d="M70 144 V190"/>
+<rect x="180" y="43" width="70" height="14" stroke="#cbd8ea" fill="#101a2b"/>
+<path d="M250 50 H320"/>
+<path d="M320 50 V98"/><path d="M300 98 H340"/><path d="M300 110 H340"/>
+<path d="M320 110 V150"/>
+<path d="M296 150 H344 M306 156 H334 M316 162 H324"/>
+<path d="M46 190 H94 M56 196 H84 M66 202 H74"/>
+</g>
+<circle cx="320" cy="50" r="3.5" fill="#38bdf8"/>
+<g fill="#cbd8ea" font-size="13" font-family="Segoe UI, sans-serif">
+<text x="168" y="35">R = 10 kΩ</text><text x="352" y="106">C = 100 nF</text>
+<text x="352" y="80" fill="#38bdf8">Vc</text><text x="30" y="88">5 V</text>
+</g></svg>`,
+   say:`Tau is 10k times 100 nanofarads, 1 millisecond. At one tau the cap is at 63 percent of 5 volts, about 3.16 volts. At five tau it's about 4.97, which I'd call settled. For 3 volts I solve 3 equals 5 times 1 minus e to the minus t over tau, so t equals tau times ln of 5 over 2, about 0.92 milliseconds.`,
+   why:"<b>Why this works:</b> showing the exponential form puts you ahead of most candidates. Sketch the curve while you say it.",
+   rubric:["τ = 1 ms","3.16 V at 1τ","≈ 4.97 V at 5τ","t ≈ 0.92 ms"]},
+
+  {r:6, cat:"Op-amp", t:150, q:"Inverting amplifier. Find the gain, the output, and the input impedance.",
+   svg:`<svg viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/svg">
+<g stroke="#8fa2bd" stroke-width="1.6" fill="none" stroke-linecap="round">
+<polygon points="320,75 320,165 400,120" stroke="#cbd8ea" fill="#101a2b"/>
+<path d="M120 105 H200"/><rect x="200" y="98" width="60" height="14" stroke="#cbd8ea" fill="#101a2b"/><path d="M260 105 H320"/>
+<path d="M400 120 H450 V50 H290 V105"/><rect x="340" y="43" width="60" height="14" stroke="#cbd8ea" fill="#101a2b"/>
+<path d="M320 135 H290 V178"/><path d="M266 178 H314 M276 184 H304 M286 190 H294"/>
+<circle cx="290" cy="105" r="3" fill="#38bdf8"/>
+</g>
+<g fill="#cbd8ea" font-size="13" font-family="Segoe UI, sans-serif">
+<text x="118" y="96">Vin = 0.5 V</text><text x="196" y="90">10 kΩ</text>
+<text x="336" y="35">Rf = 47 kΩ</text><text x="330" y="100">−</text><text x="330" y="145">+</text>
+<text x="404" y="172">±12 V</text><text x="404" y="140">Vout</text>
+</g></svg>`,
+   say:`Gain is minus Rf over Rin, minus 47 over 10, minus 4.7. With 0.5 volts in, the output is minus 2.35 volts, and that's inside the plus or minus 12 volt rails so it doesn't clip. Input impedance is Rin, 10k, because the inverting node is a virtual ground.`,
+   why:"<b>Why this works:</b> the rail check is one extra sentence and it is the one they remember.",
+   rubric:["Gain −4.7","Vout = −2.35 V","Within rails","Zin = 10 kΩ"]},
+
+  {r:6, cat:"Thevenin", t:180, q:"Find the Thevenin voltage and resistance seen looking into node A and ground. Then find the output with a 2 kΩ load connected.",
+   svg:`<svg viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/svg">
+<g stroke="#8fa2bd" stroke-width="1.6" fill="none" stroke-linecap="round">
+<circle cx="70" cy="120" r="24" stroke="#cbd8ea"/>
+<path d="M70 96 V50 H150"/><path d="M70 144 V190"/>
+<rect x="150" y="43" width="70" height="14" stroke="#cbd8ea" fill="#101a2b"/>
+<path d="M220 50 H320"/>
+<path d="M320 50 V80"/><rect x="313" y="80" width="14" height="60" stroke="#cbd8ea" fill="#101a2b"/><path d="M320 140 V190"/>
+<path d="M320 50 H440"/><circle cx="448" cy="50" r="4" stroke="#38bdf8"/>
+<path d="M296 190 H344 M306 196 H334 M316 202 H324"/>
+<path d="M46 190 H94 M56 196 H84 M66 202 H74"/>
+</g>
+<circle cx="320" cy="50" r="3.5" fill="#38bdf8"/>
+<g fill="#cbd8ea" font-size="13" font-family="Segoe UI, sans-serif">
+<text x="148" y="35">3 kΩ</text><text x="336" y="112">6 kΩ</text>
+<text x="309" y="43" fill="#38bdf8">A</text><text x="456" y="46" fill="#38bdf8">a</text>
+<text x="30" y="88">9 V</text><text x="330" y="200">b (gnd)</text>
+</g></svg>`,
+   say:`Open circuit, no current leaves the node, so the output is the divider: 9 times 6 over 9, 6 volts. Kill the source to get the resistance, which puts 3k parallel 6k, so 2k. That's 6 volts behind 2k. Load it with 2k and I get half, 3 volts, which is the loading lesson again.`,
+   why:"<b>Why this works:</b> Vth, Rth, then a loaded check. The last step proves you know what the equivalent is for.",
+   rubric:["Vth = 6 V","Rth = 2 kΩ","Loaded gives 3 V","Explains the halving"]}
+];
+
+/* ---------------- state ---------------- */
+const KEY = "adi-genTri-ojt-v1";
+let idx = 0;
+let revealed = false;
+let ratings = {};
+let times = {};
+let tick = null;
+let qStart = 0;
+
+const $ = (s) => document.querySelector(s);
+const total = Q.length;
+
+function save(){
+  try{
+    localStorage.setItem(KEY, JSON.stringify({idx, ratings, times, revealed}));
+    refreshIntro();
+  }catch(e){}
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+function refreshIntro(){
+  const s = load();
+  const has = s && s.ratings && Object.keys(s.ratings).length > 0;
+  $("#resumeBtn").classList.toggle("hidden", !has);
+  $("#clearBtn").classList.toggle("hidden", !has);
+}
+
+/* ---------------- rendering ---------------- */
+function render(){
+  const item = Q[idx];
+  const saved = load();
+  revealed = !!(saved && saved.revealed && saved.idx === idx);
+  const round = ROUNDS.find(r => r.id === item.r);
+  $("#roundLabel").textContent = round.short;
+  $("#qCounter").textContent = "Question " + (idx+1) + " / " + total;
+  $("#catLabel").innerHTML = '<span class="chip ' + (item.r <= 2 ? "beh" : "tech") + '">' + item.cat + '</span>';
+  if(item.svg){
+    $("#svgWrap").innerHTML = item.svg;
+    $("#svgWrap").classList.remove("hidden");
+  } else {
+    $("#svgWrap").innerHTML = "";
+    $("#svgWrap").classList.add("hidden");
+  }
+  $("#qText").textContent = item.q;
+  $("#suggested").textContent = "Suggested: " + Math.round(item.t/60*10)/10 + " min";
+  $("#progFill").style.width = ((idx)/total*100).toFixed(1) + "%";
+  $("#prevBtn").disabled = idx === 0;
+  $("#answerBox").classList.add("hidden");
+  $("#revealBtn").classList.remove("hidden");
+  $("#revealBtn").textContent = "Show example answer";
+  $("#sayText").textContent = item.say;
+  /* innerHTML values below come only from the static Q[] constant above; no user
+     input, URL parameter or storage value is ever interpolated into markup. */
+  $("#whyText").innerHTML = item.why;
+  $("#rubricList").innerHTML = item.rubric.map(x => "<li>" + x + "</li>").join("");
+  document.querySelectorAll("#rateRow .btn").forEach(b => b.classList.remove("r-good","r-mid","r-bad"));
+  if(ratings[idx] !== undefined){
+    const b = document.querySelector('#rateRow .btn[data-rate="' + ratings[idx] + '"]');
+    if(b) b.classList.add(ratings[idx] === 1 ? "r-good" : ratings[idx] === 0.5 ? "r-mid" : "r-bad");
+  }
+  if(revealed) showAnswer(false);
+  startTimer();
+}
+function startTimer(){
+  clearInterval(tick);
+  qStart = Date.now();
+  const base = times[idx] || 0;
+  updateTimer(base);
+  tick = setInterval(() => {
+    const s = base + Math.floor((Date.now() - qStart)/1000);
+    times[idx] = s;
+    updateTimer(s);
+  }, 1000);
+}
+function updateTimer(s){
+  const m = String(Math.floor(s/60)).padStart(2,"0");
+  const sec = String(s%60).padStart(2,"0");
+  const el = $("#timer");
+  el.textContent = m + ":" + sec;
+  el.classList.toggle("over", s > Q[idx].t);
+}
+function showAnswer(persist){
+  revealed = true;
+  $("#answerBox").classList.remove("hidden");
+  $("#revealBtn").classList.add("hidden");
+  if(persist !== false) save();
+}
+function rate(v){
+  ratings[idx] = v;
+  save();
+  document.querySelectorAll("#rateRow .btn").forEach(x => x.classList.remove("r-good","r-mid","r-bad"));
+  const b = document.querySelector('#rateRow .btn[data-rate="' + v + '"]');
+  if(b) b.classList.add(v === 1 ? "r-good" : v === 0.5 ? "r-mid" : "r-bad");
+  setTimeout(next, 220);
+}
+function next(){
+  if(idx < total - 1){ idx++; revealed = false; save(); render(); }
+  else results();
+}
+function prev(){
+  if(idx > 0){ idx--; revealed = false; save(); render(); }
+}
+
+/* ---------------- results ---------------- */
+function results(){
+  clearInterval(tick);
+  $("#quiz").classList.add("hidden");
+  $("#results").classList.remove("hidden");
+  const answered = Object.keys(ratings).length;
+  const sum = Object.values(ratings).reduce((a,b) => a+b, 0);
+  const pct = answered ? Math.round(sum/answered*100) : 0;
+  $("#scoreBig").textContent = answered ? pct + "%" : "—";
+  $("#scoreOf").textContent = answered + " of " + total + " answered";
+
+  const verdict = pct >= 85 ? "Strong for an OJT screening. Now practice the availability and paperwork answers until they are automatic, because those decide scheduling." :
+    pct >= 70 ? "Good. The remaining gaps are specific. Drill them, then re-run focusing on rounds 1 and 4." :
+    pct >= 50 ? "Half there. Fundamentals and logistics both need work. Take the weak topics below in order." :
+    "Start with rounds 1 and 4: availability, expectations, and the basics. Those are what an internship interview actually weighs.";
+
+  let html = "";
+  ROUNDS.forEach(r => {
+    const ids = Q.map((q,i) => ({q,i})).filter(o => o.q.r === r.id);
+    const got = ids.reduce((a,o) => a + (ratings[o.i] || 0), 0);
+    const p = Math.round(got/ids.length*100);
+    html += '<div class="rbar"><div><div class="t">' + r.name + '</div>' +
+            '<div class="track"><i style="width:' + p + '%"></i></div></div>' +
+            '<div class="pct">' + p + '%</div></div>';
+  });
+  $("#roundBars").innerHTML = html;
+
+  const weakCats = {};
+  Q.forEach((q,i) => {
+    if(ratings[i] === undefined || ratings[i] < 0.5) weakCats[q.cat] = (weakCats[q.cat] || 0) + 1;
+  });
+  const cats = Object.entries(weakCats).sort((a,b) => b[1]-a[1]).slice(0,8);
+  $("#weakList").innerHTML = cats.length
+    ? cats.map(c => '<span class="tag">' + c[0] + '</span>').join("")
+    : '<span class="tag" style="border-color:rgba(52,211,153,.35);color:#6ee7b7;background:rgba(52,211,153,.08)">Nothing flagged. Clean run.</span>';
+  $("#weakNote").textContent = cats.length
+    ? "Every tag above was answered partial or missed. Re-read the matching section in ADI GenTri Interview Prep.md, then run this again."
+    : "No weak areas flagged. Try the same questions again, faster.";
+  $("#verdict").textContent = verdict;
+  window.scrollTo({top:0, behavior:"smooth"});
+  refreshIntro();
+}
+
+/* ---------------- wiring ---------------- */
+$("#startBtn").addEventListener("click", () => {
+  const s = load();
+  if(s && s.ratings && Object.keys(s.ratings).length){
+    if(!confirm("A saved session exists. Start over and lose it?")) return;
+  }
+  idx = 0; ratings = {}; times = {}; revealed = false;
+  localStorage.removeItem(KEY);
+  $("#intro").classList.add("hidden");
+  $("#results").classList.add("hidden");
+  $("#quiz").classList.remove("hidden");
+  render();
+  save();
+});
+$("#resumeBtn").addEventListener("click", () => {
+  const s = load(); if(!s) return;
+  idx = Math.min(s.idx || 0, total-1);
+  ratings = s.ratings || {};
+  times = s.times || {};
+  $("#intro").classList.add("hidden");
+  $("#quiz").classList.remove("hidden");
+  render();
+});
+$("#clearBtn").addEventListener("click", () => {
+  localStorage.removeItem(KEY);
+  $("#resumeBtn").classList.add("hidden");
+  $("#clearBtn").classList.add("hidden");
+});
+$("#revealBtn").addEventListener("click", () => showAnswer(true));
+$("#prevBtn").addEventListener("click", prev);
+$("#finishBtn").addEventListener("click", results);
+$("#againBtn").addEventListener("click", () => {
+  idx = 0; ratings = {}; times = {};
+  localStorage.removeItem(KEY);
+  $("#results").classList.add("hidden");
+  $("#quiz").classList.remove("hidden");
+  render(); save();
+});
+$("#printBtn").addEventListener("click", () => window.print());
+$("#reviewBtn").addEventListener("click", () => {
+  idx = 0;
+  $("#results").classList.add("hidden");
+  $("#quiz").classList.remove("hidden");
+  render();
+});
+document.querySelectorAll("#rateRow .btn").forEach(b => {
+  b.addEventListener("click", () => rate(parseFloat(b.dataset.rate)));
+});
+document.addEventListener("keydown", (e) => {
+  if($("#quiz").classList.contains("hidden")) return;
+  if(e.code === "Space"){ e.preventDefault(); if(!revealed) showAnswer(true); }
+  else if(e.key === "1" && revealed) rate(0);
+  else if(e.key === "2" && revealed) rate(0.5);
+  else if(e.key === "3" && revealed) rate(1);
+  else if(e.key === "ArrowRight") next();
+  else if(e.key === "ArrowLeft") prev();
+});
+
+/* init */
+$("#cCount").textContent = total;
+refreshIntro();
+document.title = "ADI GenTri OJT Interview Coach (" + total + " questions)";
+</script>
+</body>
+</html>
